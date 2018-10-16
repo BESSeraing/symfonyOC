@@ -21,7 +21,7 @@ class AdvertController extends Controller
     public function indexAction($page, Request $request) {
         
         
-        return $this->render("@OCPlatform/Default/index.html.twig",["listAdverts"=>$this->getAdverts()]);
+        return $this->render("@OCPlatform/Advert/index.html.twig",["listAdverts"=>$this->getAdverts()]);
     }
     
     
@@ -29,28 +29,18 @@ class AdvertController extends Controller
     public function viewAction($id){
         
         
-        return $this->render("@OCPlatform/Default/view.html.twig",['advert'=>$this->getAdverts()[$id-1]]);
-//        
-//        return $this->get('twig')->render("@OCPlatform/Default/index.html.twig");
-//        
-        
-        
+        return $this->render("@OCPlatform/Advert/view.html.twig",['advert'=>$this->getAdverts()[$id-1]]);
+  
     }
     
     public function addAction(){
-        return $this->redirectToRoute("oc_platform_homepage");
+        return $this->render("@OCPlatform/Advert/edit.html.twig");
     }
 
-    public function editAction($id){    
-//        $responseContent = json_encode(['format'=>["message"=>"this is a json format","toto"=>"yolo"]]);
-//        $response = new Response();
-//        $response->headers->set('Content-Type', 'application/json');
-//
-//        $response->setContent($responseContent);
-//        
-//        return $response;
-        
-        return new JsonResponse(['format'=>["message"=>"this is a json format","toto"=>"yolo"]]);
+    public function editAction($id){
+
+        $advert = $this->getAdverts()[$id-1];
+        return $this->render("@OCPlatform/Advert/edit.html.twig",['advert'=>$advert]);   
     }
     
     public function deleteAction($id){
@@ -58,7 +48,7 @@ class AdvertController extends Controller
     }
     
     public function menuAction(){
-        return $this->render("@OCPlatform/Default/menu.html.twig");
+        return $this->render("@OCPlatform/Advert/menu.html.twig");
     }
     
 
