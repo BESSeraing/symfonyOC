@@ -34,7 +34,11 @@ class AdvertController extends Controller
     }
     
     public function addAction(){
-        return $this->render("@OCPlatform/Advert/edit.html.twig");
+        $textSpam = "un petit cochon pendu au plafond, tirez lui la queue il pondra des oeufs";
+        
+        dump($this->get('oc_antispam')->isSpam($textSpam));
+
+        return $this->render("@OCPlatform/Advert/add.html.twig");
     }
 
     public function editAction($id){
