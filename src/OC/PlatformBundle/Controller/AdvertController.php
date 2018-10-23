@@ -1,6 +1,7 @@
 <?php
 namespace OC\PlatformBundle\Controller;
 
+use OC\PlatformBundle\Entity\Advert;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -34,10 +35,16 @@ class AdvertController extends Controller
     }
     
     public function addAction(){
-        $textSpam = "un petit cochon pendu au plafond, tirez lui la queue il pondra des oeufs";
         
-        dump($this->get('oc_antispam')->isSpam($textSpam));
-
+        $advert = new Advert();
+        $advert->setAuthor("Gauthier");
+        $advert->setTitle("Une vache est morte ce matin."); // Inspiration de Gauthier.
+        $advert->setContent("une sombre histoire de chevalier noir, de tête détachée du corps. Cela s'est passé à Seraing. ");
+        
+        $this->get('doctrine.orm.entity_manager')->persist($advert);
+        $this->get('doctrine.orm.entity_manager')->flush();
+            
+        
         return $this->render("@OCPlatform/Advert/add.html.twig");
     }
 
