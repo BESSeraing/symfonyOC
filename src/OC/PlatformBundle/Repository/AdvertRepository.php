@@ -1,7 +1,6 @@
 <?php
 
 namespace OC\PlatformBundle\Repository;
-
 /**
  * AdvertRepository
  *
@@ -10,4 +9,25 @@ namespace OC\PlatformBundle\Repository;
  */
 class AdvertRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    /**
+     * @param $author
+     * @return Advert[]
+     */
+    public function findByAuthorWithoutLazyLoading(string $author) : array{
+        $qb = $this->createQueryBuilder('advert');
+        
+        $qb->where('advert.author = :author')
+            ->setParameter('author',$author)
+            ->orWhere('advert.author=:seb')
+            ->setParameter('seb',"Seb")
+        ;
+        
+        
+        return $qb->getQuery()->getResult();
+        
+        
+        
+        
+    }
 }

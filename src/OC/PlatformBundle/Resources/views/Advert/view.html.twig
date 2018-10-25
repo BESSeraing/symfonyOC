@@ -14,6 +14,17 @@
     <div class="well">
         {{ advert.content }}
     </div>
+    
+    {% for comment in comments %}
+    <div class="comment">
+        <div class="meta">
+            {{ comment.author }} | <time>{{ comment.creationDate.format('d-m-Y H:i') }}</time>
+        </div>
+        <div class="content">
+            {{  comment.content }}
+        </div>
+    </div>    
+    {% endfor %}
 
     <p>
         <a href="{{ path('oc_platform_homepage') }}" class="btn btn-default">

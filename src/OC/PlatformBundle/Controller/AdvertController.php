@@ -2,6 +2,8 @@
 namespace OC\PlatformBundle\Controller;
 
 use OC\PlatformBundle\Entity\Advert;
+use OC\PlatformBundle\Entity\Comment;
+use OC\PlatformBundle\Repository\AdvertRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,9 +30,14 @@ class AdvertController extends Controller
     
     
     public function viewAction($id){
+        $advertRepository = $this->get('doctrine.orm.entity_manager')->getRepository("OCPlatformBundle:Advert");
+        $commentRepo = $this->get('doctrine.orm.entity_manager')->getRepository("OCPlatformBundle:Comment");
+        
+        $advert = $advertRepository->findOneBy([],['id'=>"DESC"]);
+        $comments = $commentRepo->findBy(['advert'=>$advert]);
         
         
-        return $this->render("@OCPlatform/Advert/view.html.twig",['advert'=>$this->getAdverts()[$id-1]]);
+        return $this->render("@OCPlatform/Advert/view.html.twig",['advert'=>$advert,'comments'=>$comments]);
   
     }
     
@@ -38,10 +45,18 @@ class AdvertController extends Controller
         
         $advert = new Advert();
         $advert->setAuthor("Gauthier");
-        $advert->setTitle("Une vache est morte ce matin."); // Inspiration de Gauthier.
+        $advert->setTitle("Une vache est morte ce matin avec comment."); // Inspiration de Gauthier.
         $advert->setContent("une sombre histoire de chevalier noir, de tête détachée du corps. Cela s'est passé à Seraing. ");
         
+        $comment = new Comment();
+        $comment->setAuthor('Cédric');
+        $comment->setContent('Je ne pense pas grand chose de cette histoire sans queue ni tête');
+        $comment->setAdvert($advert);
+        
+        
+        
         $this->get('doctrine.orm.entity_manager')->persist($advert);
+        $this->get('doctrine.orm.entity_manager')->persist($comment);
         $this->get('doctrine.orm.entity_manager')->flush();
             
         
