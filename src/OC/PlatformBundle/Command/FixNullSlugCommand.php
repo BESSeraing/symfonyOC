@@ -35,8 +35,9 @@ class FixNullSlugCommand extends ContainerAwareCommand
         $adverts = $repo->findAll();
         
         foreach ($adverts as $advert){
-            $output->writeln("advert slug set to ".$advert->getId());
-            $advert->setTitle($advert->getTitle().' ');
+            $newTitle = $advert->getTitle()." ";
+            $output->writeln("advert slug set to ".$newTitle);
+            $advert->setTitle($newTitle);
         }
         if ($input->getArgument(self::ARGUMENT_SAVE)){
             $output->writeln("saving all modifications");

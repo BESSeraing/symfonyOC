@@ -32,6 +32,15 @@ class Advert
      */
     private $date;
 
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="dateUpdate", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     */
+    private $dateUpdate;
+
     /**
      * @var \DateTime
      * @ORM\Column(name="update_date",type="datetime")
@@ -316,5 +325,29 @@ class Advert
     public function getSlug()
     {
         return $this->slug;
+    }
+
+    /**
+     * Set dateUpdate
+     *
+     * @param \DateTime $dateUpdate
+     *
+     * @return Advert
+     */
+    public function setDateUpdate($dateUpdate)
+    {
+        $this->dateUpdate = $dateUpdate;
+
+        return $this;
+    }
+
+    /**
+     * Get dateUpdate
+     *
+     * @return \DateTime
+     */
+    public function getDateUpdate()
+    {
+        return $this->dateUpdate;
     }
 }
