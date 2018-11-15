@@ -150,6 +150,7 @@ class Comment
     public function setAdvert(Advert $advert = null)
     {
         $this->advert = $advert;
+        $advert->addComment($this);
 
         return $this;
     }

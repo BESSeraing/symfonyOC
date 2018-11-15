@@ -3,13 +3,16 @@
 namespace OC\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use OC\PlatformBundle\Entity\Comment;
+
 
 /**
  * Advert
  *
  * @ORM\Table(name="advert")
  * @ORM\Entity(repositoryClass="OC\PlatformBundle\Repository\AdvertRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Advert
 {
@@ -28,6 +31,12 @@ class Advert
      * @ORM\Column(name="date", type="date")
      */
     private $date;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="update_date",type="datetime")
+     */
+    private $updateDate;
 
     /**
      * @var string
@@ -52,10 +61,23 @@ class Advert
 
     /**
      * @var Comment[]
-     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Comment",mappedBy="advert")
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Comment",mappedBy="advert",cascade={"persist","remove"})
      */
     private $comments;
 
+    /**
+     * @var AdvertSkill[]
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\AdvertSkill",mappedBy="advert")
+     */
+    private $skills;
+
+    /**
+     * @var string
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(type="string",length=255, unique=true)
+     */
+    private $slug;
+    
     /**
      * Advert constructor.
      */
@@ -203,5 +225,96 @@ class Advert
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Add skill
+     *
+     * @param \OC\PlatformBundle\Entity\AdvertSkill $skill
+     *
+     * @return Advert
+     */
+    public function addSkill(\OC\PlatformBundle\Entity\AdvertSkill $skill)
+    {
+        $this->skills[] = $skill;
+
+        return $this;
+    }
+
+    /**
+     * Remove skill
+     *
+     * @param \OC\PlatformBundle\Entity\AdvertSkill $skill
+     */
+    public function removeSkill(\OC\PlatformBundle\Entity\AdvertSkill $skill)
+    {
+        $this->skills->removeElement($skill);
+    }
+
+    /**
+     * Get skills
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getSkills()
+    {
+        return $this->skills;
+    }
+
+    /**
+     * Set updateDate
+     *
+     * @param \DateTime $updateDate
+     *
+     * @return Advert
+     */
+    public function setUpdateDate($updateDate)
+    {
+        $this->updateDate = $updateDate;
+
+        return $this;
+    }
+    
+    /**
+     * Get updateDate
+     *
+     * @return \DateTime
+     */
+    public function getUpdateDate()
+    {
+        return $this->updateDate;
+    }
+    
+    //Lifecycle events
+    /**
+     * @ORM\PreUpdate
+     * @ORM\PrePersist
+     */
+    public function preUpdate(){
+        $this->updateDate = new \DateTime();
+    }
+
+    /**
+     * Set slug
+     *
+     * @param string $slug
+     *
+     * @return Advert
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * Get slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return $this->slug;
     }
 }

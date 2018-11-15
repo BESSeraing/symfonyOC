@@ -15,7 +15,7 @@
         {{ advert.content }}
     </div>
     
-    {% for comment in comments %}
+    {% for comment in advert.comments %}
     <div class="comment">
         <div class="meta">
             {{ comment.author }} | <time>{{ comment.creationDate.format('d-m-Y H:i') }}</time>

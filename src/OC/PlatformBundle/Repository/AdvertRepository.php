@@ -1,6 +1,8 @@
 <?php
 
 namespace OC\PlatformBundle\Repository;
+use OC\PlatformBundle\Entity\Advert;
+
 /**
  * AdvertRepository
  *
@@ -11,23 +13,19 @@ class AdvertRepository extends \Doctrine\ORM\EntityRepository
 {
 
     /**
-     * @param $author
-     * @return Advert[]
+     * @return Advert
      */
-    public function findByAuthorWithoutLazyLoading(string $author) : array{
+    public function findLastWithComments() : Advert{
         $qb = $this->createQueryBuilder('advert');
         
-        $qb->where('advert.author = :author')
-            ->setParameter('author',$author)
-            ->orWhere('advert.author=:seb')
-            ->setParameter('seb',"Seb")
-        ;
+        $qb->orderBy('advert.id',"DESC")
+            ->setMaxResults(1)
+            ->leftJoin('advert.comments','comments')
+            ->addSelect('comments')
+            ;
         
-        
-        return $qb->getQuery()->getResult();
-        
-        
-        
-        
+        return $qb->getQuery()->getOneOrNullResult();
     }
+    
+    
 }

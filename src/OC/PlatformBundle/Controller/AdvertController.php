@@ -31,13 +31,11 @@ class AdvertController extends Controller
     
     public function viewAction($id){
         $advertRepository = $this->get('doctrine.orm.entity_manager')->getRepository("OCPlatformBundle:Advert");
-        $commentRepo = $this->get('doctrine.orm.entity_manager')->getRepository("OCPlatformBundle:Comment");
         
-        $advert = $advertRepository->findOneBy([],['id'=>"DESC"]);
-        $comments = $commentRepo->findBy(['advert'=>$advert]);
+        $advert = $advertRepository->findLastWithComments();
         
         
-        return $this->render("@OCPlatform/Advert/view.html.twig",['advert'=>$advert,'comments'=>$comments]);
+        return $this->render("@OCPlatform/Advert/view.html.twig",['advert'=>$advert]);
   
     }
     
@@ -49,14 +47,13 @@ class AdvertController extends Controller
         $advert->setContent("une sombre histoire de chevalier noir, de tête détachée du corps. Cela s'est passé à Seraing. ");
         
         $comment = new Comment();
-        $comment->setAuthor('Cédric');
+        $comment->setAuthor('Aymeric');
         $comment->setContent('Je ne pense pas grand chose de cette histoire sans queue ni tête');
         $comment->setAdvert($advert);
         
         
         
         $this->get('doctrine.orm.entity_manager')->persist($advert);
-        $this->get('doctrine.orm.entity_manager')->persist($comment);
         $this->get('doctrine.orm.entity_manager')->flush();
             
         
@@ -64,10 +61,22 @@ class AdvertController extends Controller
     }
 
     public function editAction($id){
-
-        $advert = $this->getAdverts()[$id-1];
+        /**
+         * @var Advert $advert
+         */
+        $advert = $this->get('doctrine.orm.entity_manager')
+                    ->getRepository(Advert::class)
+                    ->findOneBy([],["id"=>"DESC"]);
+        
+        $advert->setTitle($advert->getTitle().' toto à la plage');
+        
+        $this->get('doctrine.orm.entity_manager')->persist($advert);
+        $this->get('doctrine.orm.entity_manager')->flush();
+        
         return $this->render("@OCPlatform/Advert/edit.html.twig",['advert'=>$advert]);   
     }
+    
+    
     
     public function deleteAction($id){
 

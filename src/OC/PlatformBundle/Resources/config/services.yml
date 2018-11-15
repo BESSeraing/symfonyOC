@@ -2,3 +2,9 @@ services:
   oc_antispam:
     class: OC\PlatformBundle\Antispam\OCAntispam
     arguments: [%ocantispam_length%, "@mailer" , %locale%]
+#
+  oc_comment.listener:
+    class: OC\PlatformBundle\Service\CommentDoctrineListener
+    arguments: ["@mailer","%mailer_user%"]
+    tags:
+      - {name: doctrine.event_listener, event: postPersist }
