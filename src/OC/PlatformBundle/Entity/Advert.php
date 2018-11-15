@@ -42,12 +42,6 @@ class Advert
     private $dateUpdate;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(name="update_date",type="datetime")
-     */
-    private $updateDate;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
@@ -86,6 +80,12 @@ class Advert
      * @ORM\Column(type="string",length=255, unique=true)
      */
     private $slug;
+
+    /**
+     * @var boolean
+     * @ORM\Column(type="boolean",nullable=true)
+     */
+    private $published= false;
     
     /**
      * Advert constructor.
@@ -271,39 +271,6 @@ class Advert
     }
 
     /**
-     * Set updateDate
-     *
-     * @param \DateTime $updateDate
-     *
-     * @return Advert
-     */
-    public function setUpdateDate($updateDate)
-    {
-        $this->updateDate = $updateDate;
-
-        return $this;
-    }
-    
-    /**
-     * Get updateDate
-     *
-     * @return \DateTime
-     */
-    public function getUpdateDate()
-    {
-        return $this->updateDate;
-    }
-    
-    //Lifecycle events
-    /**
-     * @ORM\PreUpdate
-     * @ORM\PrePersist
-     */
-    public function preUpdate(){
-        $this->updateDate = new \DateTime();
-    }
-
-    /**
      * Set slug
      *
      * @param string $slug
@@ -349,5 +316,29 @@ class Advert
     public function getDateUpdate()
     {
         return $this->dateUpdate;
+    }
+
+    /**
+     * Set published
+     *
+     * @param boolean $published
+     *
+     * @return Advert
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+
+        return $this;
+    }
+
+    /**
+     * Get published
+     *
+     * @return boolean
+     */
+    public function getPublished()
+    {
+        return $this->published;
     }
 }

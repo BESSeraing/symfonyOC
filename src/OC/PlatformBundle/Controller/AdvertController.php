@@ -3,6 +3,7 @@ namespace OC\PlatformBundle\Controller;
 
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Comment;
+use OC\PlatformBundle\Form\AdvertType;
 use OC\PlatformBundle\Repository\AdvertRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,25 +40,18 @@ class AdvertController extends Controller
   
     }
     
-    public function addAction(){
-        
+    public function addAction(Request $request){
         $advert = new Advert();
-        $advert->setAuthor("Gauthier");
-        $advert->setTitle("Une vache est morte ce matin avec comment."); // Inspiration de Gauthier.
-        $advert->setContent("une sombre histoire de chevalier noir, de tête détachée du corps. Cela s'est passé à Seraing. ");
+        $form = $this->createForm(AdvertType::class,$advert);
+        if ($form->handleRequest($request)->isValid()){
+            $em = $this->get('doctrine.orm.entity_manager');
+            $em->persist($advert);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add("form.success","Bien ouéj gros");
+            return $this->redirectToRoute("oc_platform_add");
+        }
         
-        $comment = new Comment();
-        $comment->setAuthor('Aymeric');
-        $comment->setContent('Je ne pense pas grand chose de cette histoire sans queue ni tête');
-        $comment->setAdvert($advert);
-        
-        
-        
-        $this->get('doctrine.orm.entity_manager')->persist($advert);
-        $this->get('doctrine.orm.entity_manager')->flush();
-            
-        
-        return $this->render("@OCPlatform/Advert/add.html.twig");
+        return $this->render("@OCPlatform/Advert/add.html.twig",['form'=>$form->createView()]);
     }
 
     public function editAction($id){

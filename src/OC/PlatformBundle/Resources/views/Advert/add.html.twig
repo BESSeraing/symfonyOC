@@ -9,6 +9,12 @@
 
 {% block ocplatform_body %}
 
+    {% for message in app.flashes('form.success') %}
+        <p class="flash-notice bg-success" style="padding:15px;">
+            {{ message }}
+        </p>
+    {% endfor %}
+    
     <h2>Ajouter une annonce</h2>
 
     {{ include("@OCPlatform/Advert/form.html.twig") }}
