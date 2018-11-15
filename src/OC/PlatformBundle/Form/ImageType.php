@@ -3,11 +3,10 @@
 namespace OC\PlatformBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdvertType extends AbstractType
+class ImageType extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -15,23 +14,16 @@ class AdvertType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('author')
-            ->add('content')
-            ->add("published")
-            ->add("image",ImageType::class)
-            ->add('submit',SubmitType::class)
-            
-            ;
-    }
-    
-    /**
+            ->add('src')
+            ->add('alt')
+        ;
+    }/**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'OC\PlatformBundle\Entity\Advert'
+            'data_class' => 'OC\PlatformBundle\Entity\Image'
         ));
     }
 
@@ -40,7 +32,7 @@ class AdvertType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'oc_platformbundle_advert';
+        return 'oc_platformbundle_image';
     }
 
 
