@@ -21,3 +21,8 @@
 
     
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/ocplatform/js/myJsScript.js') }}"></script>
+{% endblock javascripts %}

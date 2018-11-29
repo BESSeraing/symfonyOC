@@ -4,12 +4,16 @@ namespace OC\PlatformBundle\Controller;
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Comment;
 use OC\PlatformBundle\Form\AdvertType;
+use OC\PlatformBundle\Form\CommentType;
 use OC\PlatformBundle\Repository\AdvertRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class AdvertController extends Controller
@@ -30,17 +34,37 @@ class AdvertController extends Controller
     
     
     
-    public function viewAction($id){
+    public function viewAction($id,Request $request){
         $advertRepository = $this->get('doctrine.orm.entity_manager')->getRepository("OCPlatformBundle:Advert");
         
-        $advert = $advertRepository->findLastWithComments();
+        $advert = $advertRepository->find($id);
+        if ($advert == null){
+            throw new NotFoundHttpException("PAS d'advert avec cet id");
+        }
+        
+        $comment = new Comment();
+        $comment->setAuthor('me');
+        $comment->setAdvert($advert);
+        $commentForm = $this->createForm(CommentType::class,$comment);
+        
+        if ($commentForm->handleRequest($request)->isSubmitted() && $commentForm->isValid()){
+            
+            $this->get('doctrine.orm.entity_manager')->persist($comment);
+            $this->get('doctrine.orm.entity_manager')->flush();
+            return $this->redirect($request->getRequestUri());
+        }
         
         
-        return $this->render("@OCPlatform/Advert/view.html.twig",['advert'=>$advert]);
+        return $this->render("@OCPlatform/Advert/view.html.twig",['advert'=>$advert,'commentForm'=>$commentForm->createView()]);
   
     }
-    
+
+    /* Exemple de sécurisation de methode
+    * @Security("has_role('ROLE_AUTEUR')")
+    */
     public function addAction(Request $request){
+        
+        
         $advert = new Advert();
         $form = $this->createForm(AdvertType::class,$advert);
         if ($form->handleRequest($request)->isValid()){

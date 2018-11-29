@@ -4,12 +4,14 @@ namespace OC\PlatformBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use OC\PlatformBundle\Entity\Advert;
+use OC\PlatformBundle\Validator\Antiflood;
 
 /**
  * Comment
- *
+ * 
  * @ORM\Table(name="comment")
  * @ORM\Entity(repositoryClass="OC\PlatformBundle\Repository\CommentRepository")
+ * @Antiflood(message="FLOOD DETECTED, FBI CALLED !")
  */
 class Comment
 {

@@ -1,3 +1,8 @@
+oc_user:
+    resource: "@OCUserBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
 oc_platform:
     resource: "@OCPlatformBundle/Resources/config/routing.yml"
     prefix:   /
@@ -5,3 +10,9 @@ oc_platform:
 app:
     resource: '@AppBundle/Controller/'
     type: annotation
+    
+login_check:
+    path: /login_check
+
+logout:
+    path: /logout

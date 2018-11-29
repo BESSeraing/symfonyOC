@@ -9,11 +9,25 @@
 {% block ocplatform_body %}
 
     <h2>{{ advert.title }}</h2>
+    <p>
+        {% for category in advert.categories %}
+            <span class="label-info">{{ category.name }}</span>{% if loop.last == false %},{% endif %}
+        {% else %}
+            NO CATEGORY
+        {% endfor %}
+    </p>
+    <p>
     <i>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</i>
-
+    </p>
+    <div class="col-md-2">
+        <img class="img-responsive" src="{{ advert.image.src }}" alt="{{ advert.image.alt }}">
+    </div>
+    <div class="col-md-10">
     <div class="well">
         {{ advert.content }}
     </div>
+    </div>
+    <div class="clearfix"></div>
     
     {% for comment in advert.comments %}
     <div class="comment">
@@ -25,8 +39,9 @@
         </div>
     </div>    
     {% endfor %}
+    {{ form(commentForm) }}
 
-    <p>
+    <p class="mt-30">
         <a href="{{ path('oc_platform_homepage') }}" class="btn btn-default">
             <i class="glyphicon glyphicon-chevron-left"></i>
             Retour à la liste

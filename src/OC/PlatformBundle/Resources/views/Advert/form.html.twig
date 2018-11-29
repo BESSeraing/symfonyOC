@@ -24,7 +24,7 @@
         {{ form_label(form.title, "Titre de l'annonce", {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
 
         {# Affichage des erreurs pour ce champ précis. #}
-        {{ form_errors(form.title) }}
+        {{ form_errors(form.title,{'attr':{'class': "danger"}}) }}
 
         <div class="col-sm-10">
             {# Génération de l'input. #}
@@ -40,8 +40,14 @@
             {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
         </div>
     </div>
-
-    {{ form_row(form.author) }}
+    <div class="form-group">
+        {{ form_label(form.author, null, {'label_attr': {'class': 'col-sm-2 control-label'}}) }}
+        {{ form_errors(form.author) }}
+        <div class="col-sm-10">
+            {{ form_widget(form.author, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+    
     {{ form_row(form.published) }}
     {# Idem pour un autre champ. #}
     <div class="form-group">
@@ -54,9 +60,14 @@
             {{ form_widget(form.image.alt, {'attr': {'class': 'form-control'}}) }}
         </div>
     </div>
+    
+    {{ form_row(form.categories) }}
+    <a href="#" id="add_category" class="btn btn-default">Ajouter une catégorie</a>
+
+    <div class="form-group">
     {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
     {{ form_widget(form.submit, {'attr': {'class': 'btn btn-primary'}}) }}
-
+    </div>
     {# Génération automatique des champs pas encore écrits.
        Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
        et tous les champs cachés (type « hidden »). #}
@@ -67,3 +78,4 @@
     
 
 </div>
+

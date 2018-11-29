@@ -2,9 +2,11 @@
 
 namespace OC\PlatformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use OC\PlatformBundle\Entity\Comment;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -45,6 +47,8 @@ class Advert
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Assert\Length(min="6",minMessage="Tu te moques de moi ?")
+     * @Assert\Regex(pattern="#[a-zA-Z]#",message="On ne veut que des lettres !")
      */
     private $title;
 
@@ -92,6 +96,12 @@ class Advert
      * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image",cascade={"all"})
      */
     private $image;
+
+    /**
+     * @var Category[]
+     * @ORM\ManyToMany(targetEntity="OC\PlatformBundle\Entity\Category")
+     */
+    private $categories;
     
     /**
      * Advert constructor.
@@ -99,6 +109,7 @@ class Advert
     public function __construct()
     {
         $this->date = new \DateTime();
+        $this->categories = new ArrayCollection();
     }
 
 
@@ -370,5 +381,39 @@ class Advert
     public function getImage()
     {
         return $this->image;
+    }
+
+    /**
+     * Add category
+     *
+     * @param \OC\PlatformBundle\Entity\Category $category
+     *
+     * @return Advert
+     */
+    public function addCategory(\OC\PlatformBundle\Entity\Category $category)
+    {
+        $this->categories[] = $category;
+
+        return $this;
+    }
+
+    /**
+     * Remove category
+     *
+     * @param \OC\PlatformBundle\Entity\Category $category
+     */
+    public function removeCategory(\OC\PlatformBundle\Entity\Category $category)
+    {
+        $this->categories->removeElement($category);
+    }
+
+    /**
+     * Get categories
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategories()
+    {
+        return $this->categories;
     }
 }
