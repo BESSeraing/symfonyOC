@@ -12,9 +12,7 @@ security:
     # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
   providers:
     main:
-      entity:
-        class:    OC\UserBundle\Entity\User
-        property: username
+      id: fos_user.user_provider.username
     
   firewalls:
       # disables authentication for assets and the profiler, adapt it according to your needs
@@ -27,18 +25,12 @@ security:
         pattern:   ^/
         anonymous: true
         form_login:
-          login_path: login
-          check_path: login_check
+          login_path: fos_user_security_login
+          check_path: fos_user_security_check
         logout:
-          path:       logout
-          target:     login
-        # activate different ways to authenticate
-
-        # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-        #http_basic: ~
-
-        # https://symfony.com/doc/current/security/form_login_setup.html
-        #form_login: ~
+          path:       fos_user_security_logout
+          target:     fos_user_security_login
+        
   access_control:
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/add, roles: ROLE_AUTEUR }
